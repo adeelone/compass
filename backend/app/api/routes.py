@@ -29,7 +29,7 @@ def health() -> dict[str, str]:
 
 
 @router.post("/resume/analyze")
-def analyze_resume(payload: ResumeTextRequest) -> dict:
+def analyze_resume(payload: ResumeTextRequest) -> dict[str, object]:
     resume = parse_resume_text(payload.text)
     ats_score, ats_rules = evaluate_ats(resume, payload.filename)
     content_score, best, findings = score_content(resume)
@@ -44,7 +44,7 @@ def analyze_resume(payload: ResumeTextRequest) -> dict:
 
 
 @router.post("/jobs/match")
-async def match_jobs(payload: MatchRequest) -> dict:
+async def match_jobs(payload: MatchRequest) -> dict[str, object]:
     provider = get_providers()[0]
     jobs = await provider.search(payload.query, payload.location)
     scored = []
@@ -61,7 +61,6 @@ async def match_jobs(payload: MatchRequest) -> dict:
 
 
 @router.post("/profile/completeness")
-def profile_completeness(profile: CareerProfile) -> dict:
+def profile_completeness(profile: CareerProfile) -> dict[str, object]:
     score, next_steps = completeness(profile)
     return {"score": score, "next_steps": next_steps}
-

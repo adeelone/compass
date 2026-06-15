@@ -1,0 +1,12 @@
+[Unit]
+Description=Compass Docker Compose
+After=docker.service
+
+[Service]
+WorkingDirectory=/opt/compass
+ExecStart=/usr/bin/docker compose -f infra/docker-compose.yml up
+ExecStop=/usr/bin/docker compose -f infra/docker-compose.yml down
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

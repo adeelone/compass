@@ -1,0 +1,53 @@
+# OS and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Secrets and local env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+service-account*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+pytest-cache-files-*/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Node
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-lock.yaml
+yarn.lock
+
+# Runtime data
+uploads/
+fixtures/private/
+*.resume.pdf
+*.resume.docx
+minio-data/
+redis-data/
+postgres-data/
+
+# Terraform
+.terraform/
+*.tfstate*
+crash.log

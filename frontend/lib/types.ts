@@ -1,0 +1,30 @@
+export type AtsRule = {
+  id: string;
+  label: string;
+  passed: boolean;
+  severity: string;
+  fix: string;
+  source: string;
+};
+
+export type ResumeAnalysis = {
+  ats_score: number;
+  content_score: number;
+  ats_rules: AtsRule[];
+  best_points: string[];
+};
+
+export type ScoredJob = {
+  job: {
+    id: string;
+    title: string;
+    company: string;
+    locations: string[];
+    apply_url: string;
+  };
+  score: number;
+  why: { label: string; points: number; evidence: string; source: string }[];
+  missing_keywords: string[];
+  gap_closers: Record<string, string[]>;
+};
+

@@ -17,10 +17,12 @@ service-account*.json
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.pytest-tmp/
 pytest-cache-files-*/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.coverage*
 htmlcov/
 .venv/
 venv/
@@ -33,6 +35,7 @@ node_modules/
 .next/
 out/
 coverage/
+test-output/
 *.tsbuildinfo
 npm-debug.log*
 pnpm-lock.yaml

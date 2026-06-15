@@ -14,21 +14,22 @@ class MockProvider(JobProvider):
     )
 
     async def search(self, query: str, location: str | None = None) -> list[JobPosting]:
+        normalized_query = query.replace("+", " ")
+        title = "Python Backend Intern" if "intern" in normalized_query.lower() else f"{normalized_query.title()} Engineer"
         return [
             JobPosting(
                 id="mock-1",
-                title=f"{query.title()} Engineer",
+                title=title,
                 company="Example Systems",
                 locations=[location or "Remote"],
                 is_remote=True,
                 employment_type="full-time",
                 seniority="mid",
                 posted_at=datetime.utcnow(),
-                description="Build Python, FastAPI, PostgreSQL, React, and data pipelines for career products.",
+                description="Build Python and FastAPI services with PostgreSQL, React dashboards, and data pipelines for career products.",
                 apply_url="https://example.com/jobs/mock-1",
                 source=self.metadata.id,
                 source_kind=self.metadata.kind,
                 raw_hash="mock-1",
             )
         ]
-

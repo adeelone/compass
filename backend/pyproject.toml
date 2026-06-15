@@ -13,7 +13,8 @@ dependencies = [
   "email-validator==2.2.0",
   "python-docx==1.1.2",
   "pdfminer.six==20240706",
-  "pypdf==5.1.0"
+  "pypdf==5.1.0",
+  "python-multipart==0.0.20"
 ]
 
 [project.optional-dependencies]
@@ -21,6 +22,7 @@ dev = [
   "pytest==8.3.4",
   "pytest-asyncio==0.25.0",
   "pytest-cov==6.0.0",
+  "httpx==0.28.1",
   "ruff==0.8.4",
   "black==24.10.0",
   "mypy==1.14.0",

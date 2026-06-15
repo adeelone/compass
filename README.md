@@ -1,6 +1,6 @@
 # Compass
 
-Compass is an AI-augmented job search, resume intelligence, and career operating system for job seekers who want sourced recommendations, transparent scoring, and one canonical career profile.
+Compass is a job-search workspace with resume analysis, profile-based matching, sourced recommendations, and an application tracker.
 
 ![CI](https://img.shields.io/badge/ci-pending-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-teal)
@@ -70,7 +70,7 @@ docs/      Supporting architecture and operations material
 4. Register it in `providers/registry.py`.
 5. Add a recorded fixture test with synthetic data only.
 
-## Switching AI Providers
+## Switching Model Providers
 
 Set `ENABLE_LLM_FEATURES=true`, choose `LLM_PROVIDER`, and provide the provider API key. Embeddings follow the same pattern through `EMBEDDING_PROVIDER`. Keep prompts versioned in `PROMPTS.md`.
 
@@ -95,4 +95,3 @@ See `CONTRIBUTING.md`.
 ## License
 
 MIT.
-

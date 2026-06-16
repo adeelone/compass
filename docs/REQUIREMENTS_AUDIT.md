@@ -4,8 +4,8 @@ Source: `codex_humanize_compass.docx.md` requirements source and supplied test c
 
 ## Summary
 
-- PASS: 13
-- PARTIAL: 17
+- PASS: 18
+- PARTIAL: 12
 - FAIL: 0
 
 ## Functional Requirements
@@ -20,24 +20,24 @@ Source: `codex_humanize_compass.docx.md` requirements source and supplied test c
 | TypeScript strict | PASS | `frontend/tsconfig.json` enables `strict`. |
 | Tailwind UI | PASS | Tailwind is configured and used in the component classes. |
 | Resume upload endpoint | PASS | `POST /api/resume/upload` accepts a file and returns `resume_id`, ATS score, content score, and parsed sections. |
-| PDF/DOCX/TXT/OCR upload support | PARTIAL | Upload accepts files, but the parser currently decodes text bytes and does not run real PDF/DOCX/OCR extraction. |
+| PDF/DOCX/TXT/OCR upload support | PARTIAL | `extract_resume_text` handles TXT, PDF, and DOCX extraction with fallbacks; OCR still requires a worker. |
 | ATS readability scoring | PASS | `backend/app/resume/ats_rules.py` returns deterministic rule results and a 0-100 score. |
 | Content quality scoring | PASS | `backend/app/resume/content_scorer.py` scores metrics and action verbs. |
 | Canonical profile model | PASS | `CareerProfile` is defined in `backend/app/db/models.py`. |
-| Aggregated job feed | PARTIAL | `GET /api/jobs` returns scored jobs from the provider registry, currently using the mock provider. |
+| Aggregated job feed | PASS | `GET /api/jobs` queries every registered provider, ranks results, stores them, and returns scored postings. |
 | Pluggable `JobProvider` | PASS | `JobProvider` and `ProviderMetadata` are defined under `backend/app/jobs/providers`. |
-| Greenhouse/Lever/Ashby/Adzuna/USAJobs/Remotive providers | PARTIAL | These sources are documented in `PROVIDERS.md`; only the mock provider is implemented. |
+| Greenhouse/Lever/Ashby/Adzuna/USAJobs/Remotive providers | PARTIAL | Named provider classes with metadata are registered; live API clients still require credentials and network adapters. |
 | Hybrid FTS and vector search | PARTIAL | `search_jobs` and `hybrid_rank` exist, but there is no Postgres FTS or vector index yet. |
 | Per-job 0-100 match score | PASS | `score_job` returns a bounded score and sourced reasons. |
 | Sourced rationale | PASS | Match reasons include `source` and evidence strings. |
 | Matched and missing keywords | PASS | `/api/jobs` and `/api/match` return both arrays. |
 | Gap-closer resources | PASS | `recommend_resources` returns cited URLs for known missing keywords. |
-| Tailored resume export | PARTIAL | `tailored_summary` exists; full versioned resume export is not implemented. |
-| Cover letter export | PARTIAL | Tailoring scaffolding exists, but no cover-letter endpoint/export exists. |
-| Application tracker and kanban | PARTIAL | Status model and frontend kanban exist; persistence and full workflow are not implemented. |
+| Tailored resume export | PASS | `GET /api/resume/{resume_id}/export` returns Markdown or JSON from the stored resume/profile. |
+| Cover letter export | PASS | `POST /api/cover-letter` drafts a sourced cover letter from a stored resume and job. |
+| Application tracker and kanban | PASS | Application status APIs persist local JSON state, and the frontend has a kanban view. |
 | Email ingest and reminders | PARTIAL | Feature flags and worker placeholder exist; no email parser or reminder scheduler is implemented. |
-| Notifications | PARTIAL | Digest builder exists; in-app/email/push delivery is not implemented. |
-| Per-field privacy | PARTIAL | Profile visibility fields exist; enforcement is not implemented. |
+| Notifications | PARTIAL | Digest and reminder endpoints exist; email, browser push, and webhook delivery are not implemented. |
+| Per-field privacy | PASS | `POST /api/profile/public` filters profile output through field visibility settings. |
 | Docker-first dev | PASS | `infra/docker-compose.yml`, backend Dockerfile, and frontend Dockerfile exist. |
 | CI lint/typecheck/test and eval gate | PASS | GitHub Actions define backend/frontend CI and eval workflow. |
 | Test case upload/jobs/match flow | PASS | `backend/tests/test_api_flow.py` covers the supplied flow with a synthetic fixture. |
@@ -51,3 +51,7 @@ Source: `codex_humanize_compass.docx.md` requirements source and supplied test c
 - Added `backend/tests/fixtures/sample_resume.pdf`.
 - Added API-flow tests for upload, jobs, and stored resume/job matching.
 - Added frontend API client tests.
+- Added file-type extraction fallbacks for TXT/PDF/DOCX/image uploads.
+- Added registered provider classes for Greenhouse, Lever, Ashby, Adzuna, USAJobs, and Remotive.
+- Added local JSON persistence for resumes, jobs, and applications.
+- Added tailored resume export, cover-letter, application, digest, reminder, and public-profile APIs.

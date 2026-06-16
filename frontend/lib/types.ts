@@ -28,3 +28,12 @@ export type ScoredJob = {
   gap_closers: Record<string, string[]>;
 };
 
+export type ApplicationStatus = "saved" | "applied" | "interviewing" | "offer" | "closed";
+
+export type Application = {
+  job_id: string;
+  status: ApplicationStatus;
+  notes: string[];
+  contacts: string[];
+  updated_at: string;
+};

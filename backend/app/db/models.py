@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from enum import Enum
 from pydantic import BaseModel, Field
 
@@ -57,7 +57,7 @@ class Resume(BaseModel):
     skills: list[Skill] = Field(default_factory=list)
     source_text: str = ""
     formatting_warnings: list[str] = Field(default_factory=list)
-    parsed_at: datetime = Field(default_factory=datetime.utcnow)
+    parsed_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class CareerProfile(BaseModel):

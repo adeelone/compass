@@ -1,4 +1,4 @@
-import type { ResumeAnalysis, ScoredJob } from "./types";
+import type { Application, ApplicationStatus, ResumeAnalysis, ScoredJob } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api";
 
@@ -62,3 +62,41 @@ export async function getProfileCompleteness(): Promise<{ score: number; next_st
   return response.json();
 }
 
+export async function exportResume(resumeId: string, jobId?: string): Promise<{ format: string; content: string }> {
+  const params = new URLSearchParams({ format: "markdown" });
+  if (jobId) params.set("job_id", jobId);
+  const response = await fetch(`${API_BASE}/resume/${resumeId}/export?${params.toString()}`);
+  return response.json();
+}
+
+export async function draftCoverLetter(resumeId: string, jobId: string): Promise<{ content: string; source: string }> {
+  const response = await fetch(`${API_BASE}/cover-letter`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ resume_id: resumeId, job_id: jobId }),
+  });
+  return response.json();
+}
+
+export async function saveApplication(jobId: string, status: ApplicationStatus, note?: string): Promise<Application> {
+  const response = await fetch(`${API_BASE}/applications`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ job_id: jobId, status, note }),
+  });
+  return response.json();
+}
+
+export async function getDigest(): Promise<{ content: string; count: number }> {
+  const response = await fetch(`${API_BASE}/notifications/digest`);
+  return response.json();
+}
+
+export async function getPublicProfile(profile: object): Promise<Record<string, unknown>> {
+  const response = await fetch(`${API_BASE}/profile/public`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(profile),
+  });
+  return response.json();
+}

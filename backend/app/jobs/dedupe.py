@@ -13,3 +13,14 @@ def dedupe_jobs(jobs: list[JobPosting]) -> list[JobPosting]:
         deduped.append(job)
     return deduped
 
+
+def dedupe_exact_source(jobs: list[JobPosting]) -> list[JobPosting]:
+    seen: set[str] = set()
+    result: list[JobPosting] = []
+    for job in jobs:
+        key = f"{job.source}:{job.raw_hash}"
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(job)
+    return result

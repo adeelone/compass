@@ -8,7 +8,8 @@ from app.embeddings.provider import MockEmbeddingProvider
 from app.jobs.index import search_jobs
 from app.llm.provider import MockLLMProvider
 from app.notify.digest import build_digest
-from app.profile.completeness import completeness
+from app.profile.completeness import completeness, public_profile
+from app.resume.extract import extract_resume_text
 from app.resume.rewrite import rewrite_bullet
 from app.search.hybrid import hybrid_rank
 from app.storage.local import LocalStorage
@@ -63,6 +64,8 @@ def test_profile_tailoring_digest_and_ai_mocks() -> None:
     assert search_jobs([job], "python")
     assert hybrid_rank([job], "fastapi") == [job]
     assert len(rewrite_bullet("Built APIs")) == 3
+    assert extract_resume_text("resume.txt", b"Ada Example")[0] == "Ada Example"
+    assert public_profile(profile) == {"name": "Ada Example"}
 
     async def run_mocks() -> None:
         assert await MockEmbeddingProvider().embed("abc")

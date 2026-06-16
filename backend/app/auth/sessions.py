@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from secrets import token_urlsafe
 
 
@@ -11,5 +11,4 @@ class Session:
 
 
 def create_session(subject: str) -> Session:
-    return Session(token=token_urlsafe(32), subject=subject, expires_at=datetime.utcnow() + timedelta(days=7))
-
+    return Session(token=token_urlsafe(32), subject=subject, expires_at=datetime.now(UTC) + timedelta(days=7))

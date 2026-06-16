@@ -36,6 +36,7 @@ node_modules/
 out/
 coverage/
 test-output/
+data/
 *.tsbuildinfo
 npm-debug.log*
 pnpm-lock.yaml

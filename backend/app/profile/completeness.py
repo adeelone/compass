@@ -11,3 +11,18 @@ def completeness(profile: CareerProfile) -> tuple[int, list[str]]:
     done = sum(checks.values())
     return round(done / len(checks) * 100), [label for label, passed in checks.items() if not passed]
 
+
+def public_profile(profile: CareerProfile) -> dict[str, object]:
+    allowed = {
+        field
+        for field, visibility in profile.visibility.items()
+        if getattr(visibility, "value", visibility) == "public"
+    }
+    payload: dict[str, object] = {"name": profile.contact.name}
+    if "headline" in allowed and profile.headline:
+        payload["headline"] = profile.headline
+    if "skills" in allowed:
+        payload["skills"] = [skill.name for skill in profile.skills]
+    if "projects" in allowed:
+        payload["projects"] = [project.model_dump(mode="json") for project in profile.projects]
+    return payload

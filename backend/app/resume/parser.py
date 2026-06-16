@@ -44,6 +44,13 @@ def _parse_skills(lines: list[str]) -> list[Skill]:
             raw = " ".join(lines[index + 1 : index + 4])
             names = [part.strip(" .") for part in re.split(r"[,|/]", raw) if part.strip()]
             return [Skill(name=name, category="technical") for name in names[:20]]
+    inferred = []
+    text = " ".join(lines).lower()
+    for name in ["Python", "FastAPI", "PostgreSQL", "React", "Docker", "Redis", "SQL"]:
+        if name.lower() in text:
+            inferred.append(Skill(name=name, category="technical"))
+    if inferred:
+        return inferred
     return []
 
 

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 from pydantic import BaseModel, Field
 
@@ -16,5 +16,4 @@ class Application(BaseModel):
     status: ApplicationStatus = ApplicationStatus.saved
     notes: list[str] = Field(default_factory=list)
     contacts: list[str] = Field(default_factory=list)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))

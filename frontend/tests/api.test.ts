@@ -4,10 +4,13 @@ import {
   draftCoverLetter,
   exportResume,
   getDigest,
+  getJobs,
   getProfileCompleteness,
   getPublicProfile,
+  listApplications,
   matchJobs,
   saveApplication,
+  uploadResume,
 } from "../lib/api";
 
 describe("api client", () => {
@@ -23,13 +26,19 @@ describe("api client", () => {
   });
 
   test("calls backend endpoints", async () => {
-    const fetchMock = vi.spyOn(global, "fetch").mockImplementation(async (input) => {
+    const fetchMock = vi.spyOn(global, "fetch").mockImplementation(async (input, init) => {
       const url = String(input);
       if (url.endsWith("/resume/analyze")) {
         return Response.json({ ats_score: 80, content_score: 90, ats_rules: [], best_points: [] });
       }
+      if (url.endsWith("/resume/upload")) {
+        return Response.json({ resume_id: "res_1", ats_score: 80, content_score: 90, ats_rules: [], best_points: [] });
+      }
+      if (url.includes("/jobs?")) {
+        return Response.json({ results: [{ job: { id: "1", title: "Engineer", company: "Example", locations: [], apply_url: "https://example.com" }, score: 75, matched_keywords: ["python"], why: [], missing_keywords: [], gap_closers: {} }] });
+      }
       if (url.endsWith("/jobs/match")) {
-        return Response.json({ results: [{ job: { id: "1", title: "Engineer", company: "Example", locations: [], apply_url: "https://example.com" }, score: 75, why: [], missing_keywords: [], gap_closers: {} }] });
+        return Response.json({ results: [{ job: { id: "1", title: "Engineer", company: "Example", locations: [], apply_url: "https://example.com" }, score: 75, matched_keywords: ["python"], why: [], missing_keywords: [], gap_closers: {} }] });
       }
       if (url.includes("/resume/res_1/export")) {
         return Response.json({ format: "markdown", content: "# Ada Example" });
@@ -37,8 +46,11 @@ describe("api client", () => {
       if (url.endsWith("/cover-letter")) {
         return Response.json({ content: "Dear Example", source: "profile+job" });
       }
-      if (url.endsWith("/applications")) {
+      if (url.endsWith("/applications") && init?.method === "POST") {
         return Response.json({ job_id: "job_1", status: "applied", notes: [], contacts: [], updated_at: "2026-06-16T00:00:00Z" });
+      }
+      if (url.endsWith("/applications")) {
+        return Response.json({ results: [{ job_id: "job_1", status: "applied", notes: [], contacts: [], updated_at: "2026-06-16T00:00:00Z" }] });
       }
       if (url.endsWith("/notifications/digest")) {
         return Response.json({ content: "# Compass Daily Digest", count: 1 });
@@ -50,13 +62,16 @@ describe("api client", () => {
     });
 
     expect((await analyzeResume("Ada")).content_score).toBe(90);
+    expect((await uploadResume(new File(["Ada"], "resume.txt"))).resume_id).toBe("res_1");
+    expect((await getJobs("python"))[0].matched_keywords).toContain("python");
     expect((await matchJobs())[0].job.title).toBe("Engineer");
     expect((await getProfileCompleteness()).score).toBe(50);
     expect((await exportResume("res_1")).content).toContain("Ada");
     expect((await draftCoverLetter("res_1", "job_1")).source).toBe("profile+job");
     expect((await saveApplication("job_1", "applied")).status).toBe("applied");
+    expect((await listApplications())[0].status).toBe("applied");
     expect((await getDigest()).count).toBe(1);
     expect((await getPublicProfile({ contact: { name: "Ada Example" } })).name).toBe("Ada Example");
-    expect(fetchMock).toHaveBeenCalledTimes(8);
+    expect(fetchMock).toHaveBeenCalledTimes(11);
   });
 });

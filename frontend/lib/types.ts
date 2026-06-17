@@ -8,10 +8,16 @@ export type AtsRule = {
 };
 
 export type ResumeAnalysis = {
+  resume_id?: string;
   ats_score: number;
   content_score: number;
   ats_rules: AtsRule[];
   best_points: string[];
+  parsed_sections?: {
+    work: unknown[];
+    education: unknown[];
+    skills: unknown[];
+  };
 };
 
 export type ScoredJob = {
@@ -23,9 +29,11 @@ export type ScoredJob = {
     apply_url: string;
   };
   score: number;
+  matched_keywords: string[];
   why: { label: string; points: number; evidence: string; source: string }[];
   missing_keywords: string[];
   gap_closers: Record<string, string[]>;
+  source_attribution?: string;
 };
 
 export type ApplicationStatus = "saved" | "applied" | "interviewing" | "offer" | "closed";

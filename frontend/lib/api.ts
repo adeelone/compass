@@ -21,11 +21,32 @@ export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
   return response.json();
 }
 
+export async function uploadResume(file: File): Promise<ResumeAnalysis> {
+  const form = new FormData();
+  form.append("file", file);
+  const response = await fetch(`${API_BASE}/resume/upload`, {
+    method: "POST",
+    body: form,
+  });
+  return response.json();
+}
+
+export async function getJobs(query = "python intern"): Promise<ScoredJob[]> {
+  if (process.env.NEXT_PUBLIC_USE_MOCK_API === "true") {
+    return matchJobs();
+  }
+  const params = new URLSearchParams({ query });
+  const response = await fetch(`${API_BASE}/jobs?${params.toString()}`);
+  const data = await response.json();
+  return data.results;
+}
+
 export async function matchJobs(): Promise<ScoredJob[]> {
   if (process.env.NEXT_PUBLIC_USE_MOCK_API === "true") {
     return [{
       job: { id: "mock-1", title: "Backend Engineer", company: "Example Systems", locations: ["Remote"], apply_url: "https://example.com/jobs/mock-1" },
       score: 87,
+      matched_keywords: ["python", "fastapi"],
       why: [{ label: "Skill overlap", points: 55, evidence: "Python and FastAPI", source: "mock" }],
       missing_keywords: ["react", "postgres"],
       gap_closers: { react: ["https://react.dev/learn"], postgres: ["https://www.postgresql.org/docs/current/tutorial.html"] },
@@ -85,6 +106,12 @@ export async function saveApplication(jobId: string, status: ApplicationStatus, 
     body: JSON.stringify({ job_id: jobId, status, note }),
   });
   return response.json();
+}
+
+export async function listApplications(): Promise<Application[]> {
+  const response = await fetch(`${API_BASE}/applications`);
+  const data = await response.json();
+  return data.results;
 }
 
 export async function getDigest(): Promise<{ content: string; count: number }> {

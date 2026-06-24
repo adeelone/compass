@@ -12,7 +12,7 @@ dependencies = [
   "alembic==1.14.0",
   "email-validator==2.2.0",
   "python-docx==1.1.2",
-  "pdfminer.six==20240706",
+  "pdfminer.six==20260107",
   "pypdf==5.1.0",
   "python-multipart==0.0.20"
 ]
